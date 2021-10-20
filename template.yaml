@@ -1,0 +1,1449 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  S3BucketArn:
+    Type: String
+    Description: ARN of S3 Bucket which contains resources for lambda functions.
+  CalendarId:
+    Type: String
+    Description: Google Calendar ID. For main Google Calendar its your Email ID (eg. abc@gmail.com). 
+  CalendlyAPIKey:
+    Type: String
+    Description: Calendly API key.
+  CalendlySchedulingURL:
+    Type: String
+    Description: Calendly event scheduling URL (Must not end with /).
+  FernetKey:
+    Type: String
+    Description: Fernet encryption key.
+  OptionalEmailAddress:
+    Type: String
+    Description: >-
+      Default attendee email address in-case attendees do not wish to share
+      their email to schedule events. Mails for scheduled events are sent to
+      this address. You should own this email!
+  TwilioAccountSID:
+    Type: String
+    Description: Twilio account SID
+  TwilioAuthToken:
+    Type: String
+    Description: Twilio auth yoken
+  TwilioPhoneNumber:
+    Type: String
+    Description: Twilio phone number
+  DomainName:
+    Type: String
+    Description: >-
+      Domain name to use for re-schedule, cancellation and shortened urls.
+      Verify that you own this domain by visiting AWS Certificate Manager
+Metadata:
+  'AWS::CloudFormation::Designer':
+    5ed58d12-96e8-4305-a311-b4edabcc7a05:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 730
+        'y': 10
+      z: 0
+      embeds: []
+    14414533-f303-411a-ab30-ac8e77958898:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -230
+        'y': 130
+      z: 0
+      embeds: []
+    943f91aa-b9bf-42af-9c1c-7de5e194b07e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -120
+        'y': 280
+      z: 0
+      embeds: []
+    e4a115f1-cf6a-41e3-856d-e566b3effcf0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 140
+        'y': -130
+      z: 0
+      embeds: []
+      dependson:
+        - 14414533-f303-411a-ab30-ac8e77958898
+        - 943f91aa-b9bf-42af-9c1c-7de5e194b07e
+        - 75d1beed-ff43-4b02-87a3-1df6ec22e90d
+        - 18c8d45b-d216-4127-8841-a071e861ef0f
+    87b91e6a-96bc-4489-93f9-764030024945:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 670.9599745814347
+        'y': 159.7272796951503
+      z: 0
+      embeds: []
+    e9ca297b-2db3-46fa-8544-bfd1ae3b1cc5:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 734.5539676470784
+        'y': 269.72770013302033
+      z: 0
+      embeds: []
+    038120f7-383e-482c-9dd1-5be07d60cfad:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 732.8352110777366
+        'y': 420.9782782350917
+      z: 0
+      embeds: []
+    46b3ae3d-9835-47b8-81ba-df6921075a4c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 750
+        'y': 560
+      z: 0
+      embeds: []
+    170c9b2e-b9ad-4c32-bafc-7e92c74451bd:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 672.6787311507765
+        'y': -151.36765935570097
+      z: 0
+      embeds: []
+    e05129fa-817a-4c14-bae6-d4c8f7062451:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 770
+        'y': 680
+      z: 0
+      embeds: []
+    18c8d45b-d216-4127-8841-a071e861ef0f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -440
+        'y': 640
+      z: 0
+      embeds: []
+      dependson:
+        - 925bb958-2d1b-465e-b3a1-4d949caf047c
+    75d1beed-ff43-4b02-87a3-1df6ec22e90d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -580
+        'y': 350
+      z: 0
+      embeds: []
+      dependson:
+        - 925bb958-2d1b-465e-b3a1-4d949caf047c
+    925bb958-2d1b-465e-b3a1-4d949caf047c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -110
+        'y': 980
+      z: 0
+      embeds: []
+      isassociatedwith:
+        - 18c8d45b-d216-4127-8841-a071e861ef0f
+        - 75d1beed-ff43-4b02-87a3-1df6ec22e90d
+    151ae1c0-55bc-407b-b90a-f9828443e7f3:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1580
+        'y': 150
+      z: 0
+      embeds: []
+    08c9740f-1c01-4fe2-95b0-367333df984d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1580
+        'y': 260
+      z: 0
+      embeds: []
+    d1781584-1da1-4359-99f0-48675e3b32f8:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1860
+        'y': 260
+      z: 0
+      embeds: []
+      dependson:
+        - 045aac08-00ac-40d2-8518-2e7cafa01cd8
+        - 08c9740f-1c01-4fe2-95b0-367333df984d
+    7b97d9f1-e55a-429f-b91e-f25a011e9167:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2080
+        'y': 320
+      z: 0
+      embeds: []
+      dependson:
+        - 8df7156c-619f-4ff0-985b-ac61aa8e92fd
+        - 08c9740f-1c01-4fe2-95b0-367333df984d
+    045aac08-00ac-40d2-8518-2e7cafa01cd8:
+      size:
+        width: 190
+        height: 170
+      position:
+        x: 1770
+        'y': -100
+      z: 0
+      embeds: []
+      dependson:
+        - 170c9b2e-b9ad-4c32-bafc-7e92c74451bd
+    8df7156c-619f-4ff0-985b-ac61aa8e92fd:
+      size:
+        width: 180
+        height: 170
+      position:
+        x: 2020
+        'y': -40
+      z: 0
+      embeds: []
+      dependson:
+        - 5ed58d12-96e8-4305-a311-b4edabcc7a05
+    8847e112-828a-4f75-92d9-d6e759abcf58:
+      size:
+        width: 180
+        height: 180
+      position:
+        x: 2290
+        'y': 100
+      z: 0
+      embeds: []
+      dependson:
+        - 87b91e6a-96bc-4489-93f9-764030024945
+    34c5bfae-44be-4056-8042-63acebf6331c:
+      size:
+        width: 180
+        height: 180
+      position:
+        x: 2520
+        'y': 400
+      z: 0
+      embeds: []
+      dependson:
+        - e9ca297b-2db3-46fa-8544-bfd1ae3b1cc5
+    5ef79daa-12b9-4764-88c9-2fd4266aafda:
+      size:
+        width: 80
+        height: 100
+      position:
+        x: 730
+        'y': -310
+      z: 0
+      embeds: []
+    fa5bce6b-26d7-49f5-a056-cab9e60416f6:
+      size:
+        width: 80
+        height: 80
+      position:
+        x: 870
+        'y': -300
+      z: 0
+      embeds: []
+    7d436c17-5e06-43bc-9baf-60a255687c2b:
+      size:
+        width: 80
+        height: 80
+      position:
+        x: 980
+        'y': -300
+      z: 0
+      embeds: []
+    6b470c8c-288b-48b8-b800-70ea981baef5:
+      size:
+        width: 110
+        height: 90
+      position:
+        x: 1080
+        'y': -310
+      z: 0
+      embeds: []
+    fb0780af-84d4-489d-bb51-e4017201e2bd:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1220
+        'y': -290
+      z: 0
+      embeds: []
+    9c7ddd0b-8745-41c3-9513-01a9dc83f94a:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1340
+        'y': -300
+      z: 0
+      embeds: []
+    d6701790-9006-458d-ab2e-da6a12c9c874:
+      size:
+        width: 80
+        height: 80
+      position:
+        x: 1460
+        'y': -300
+      z: 0
+      embeds: []
+    a3819454-7758-4da8-b953-ae4685fef002:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 410
+        'y': 1150
+      z: 0
+      embeds: []
+    a29a8f84-12a2-4812-8e2c-58e41f83189f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1700
+        'y': -380
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 045aac08-00ac-40d2-8518-2e7cafa01cd8
+      dependson:
+        - d567b757-52e8-453b-80d8-decfb7fec25d
+    0555feb4-396f-4ecb-88f5-43751388c4ba:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2080
+        'y': -260
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 8df7156c-619f-4ff0-985b-ac61aa8e92fd
+      dependson:
+        - 65cefaa3-ccc6-4c59-aaa8-8eb524584071
+    bd029848-efb9-4f58-860e-ed6e21bf210b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2350
+        'y': -170
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 8847e112-828a-4f75-92d9-d6e759abcf58
+      dependson:
+        - 588d0fc0-11d3-4520-a4a5-7a2238d8981b
+    4a7462a1-4db4-46cf-8214-941d517503d0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2580
+        'y': 190
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 34c5bfae-44be-4056-8042-63acebf6331c
+      dependson:
+        - 45ad3c36-de11-4371-bacb-c12ad295faca
+    d567b757-52e8-453b-80d8-decfb7fec25d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1990
+        'y': -370
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 045aac08-00ac-40d2-8518-2e7cafa01cd8
+        - d7115ba8-169a-41c4-a0e1-a993663d450f
+      dependson:
+        - e9ca297b-2db3-46fa-8544-bfd1ae3b1cc5
+    65cefaa3-ccc6-4c59-aaa8-8eb524584071:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2080
+        'y': -440
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 8df7156c-619f-4ff0-985b-ac61aa8e92fd
+        - a23857c0-b3e7-42ff-bce3-5fde82500446
+      dependson:
+        - 170c9b2e-b9ad-4c32-bafc-7e92c74451bd
+    588d0fc0-11d3-4520-a4a5-7a2238d8981b:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2350
+        'y': -310
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 8847e112-828a-4f75-92d9-d6e759abcf58
+        - 7e4acfde-c01a-4f4b-937c-2273ddb57bfc
+      dependson:
+        - e05129fa-817a-4c14-bae6-d4c8f7062451
+    45ad3c36-de11-4371-bacb-c12ad295faca:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2740
+        'y': 190
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - 34c5bfae-44be-4056-8042-63acebf6331c
+        - 1846cb7b-bd26-450d-9d0e-2f5ccde9cb0c
+      dependson:
+        - 46b3ae3d-9835-47b8-81ba-df6921075a4c
+    d7115ba8-169a-41c4-a0e1-a993663d450f:
+      size:
+        width: 140
+        height: 140
+      position:
+        x: 1800
+        'y': -640
+      z: 0
+      embeds: []
+    a23857c0-b3e7-42ff-bce3-5fde82500446:
+      size:
+        width: 140
+        height: 140
+      position:
+        x: 2050
+        'y': -640
+      z: 0
+      embeds: []
+    7e4acfde-c01a-4f4b-937c-2273ddb57bfc:
+      size:
+        width: 140
+        height: 140
+      position:
+        x: 2300
+        'y': -630
+      z: 0
+      embeds: []
+    d4601358-a0e4-4b69-bd0d-aea2eeaaa977:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1040
+        'y': -630
+      z: 0
+      embeds: []
+    7007e8e2-bfda-40c5-9bcc-14f4bcd53328:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 930
+        'y': -390
+      z: 0
+      embeds: []
+      dependson:
+        - 5ed58d12-96e8-4305-a311-b4edabcc7a05
+    cab1adb0-e2f0-44e6-aeba-7a9c402e1e4c:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1290
+        'y': -400
+      z: 0
+      embeds: []
+      dependson:
+        - 038120f7-383e-482c-9dd1-5be07d60cfad
+    b317f7e4-8a12-460b-a313-ce256e6f7172:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1040
+        'y': -410
+      z: 0
+      embeds: []
+      dependson:
+        - 87b91e6a-96bc-4489-93f9-764030024945
+    b949445c-8967-4cde-9937-9f3807fce08d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1792.3929582228584
+        'y': 773.3878363109591
+      z: 0
+    4c5ee952-e4cb-4eb5-9e29-135af6a10b6d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2090
+        'y': 770
+      z: 0
+    e93eccbc-befd-41ed-9d82-328ceb05ef68:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2360
+        'y': 780
+      z: 0
+    cacf7bb8-660d-44fd-afa1-ad986761bebb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 2600
+        'y': 760
+      z: 0
+Resources:
+  LF59EBZ:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-GoogleCalendarPoller
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 900
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: FETCH_EVENTS
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5ed58d12-96e8-4305-a311-b4edabcc7a05
+    DependsOn:
+      - LLV4LYQ1
+  DDBTLTDT:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: description_missing
+          AttributeType: S
+        - AttributeName: track_for_msg
+          AttributeType: S
+        - AttributeName: msg_not_sent
+          AttributeType: S
+        - AttributeName: msg_sid
+          AttributeType: S
+        - AttributeName: location
+          AttributeType: S
+        - AttributeName: start_epoch
+          AttributeType: 'N'
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      TableName: GoogleEventManager-GoogleCalendarEvents
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      GlobalSecondaryIndexes:
+        - IndexName: GoogleEventManager-EventDescriptionMissingIndex
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+            - AttributeName: description_missing
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GoogleEventManager-EventsToMsg
+          KeySchema:
+            - AttributeName: track_for_msg
+              KeyType: HASH
+            - AttributeName: msg_not_sent
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GoogleEventManager-MessageDeliveryStatusIndex
+          KeySchema:
+            - AttributeName: msg_sid
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GoogleEventManager-PhoneNumberIndex
+          KeySchema:
+            - AttributeName: location
+              KeyType: HASH
+            - AttributeName: start_epoch
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 14414533-f303-411a-ab30-ac8e77958898
+  DDBT56ZP2:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: code
+          AttributeType: S
+      KeySchema:
+        - AttributeName: code
+          KeyType: HASH
+      TableName: GoogleEventManager-RedirectCodeUrlMappings
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 943f91aa-b9bf-42af-9c1c-7de5e194b07e
+  LLV4LYQ1:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      CompatibleRuntimes:
+        - python3.9
+      Content:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-layer.zip
+      Description: Lambda layer for Lambda functions created for GoogleEventManager project
+      LayerName: GoogleEventManager-Layer
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e4a115f1-cf6a-41e3-856d-e566b3effcf0
+    DependsOn:
+      - DDBTLTDT
+      - DDBT56ZP2
+      - IAMU39HL8
+      - IAMR10MWK
+  LF1EJAP:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-PopulateGoogleCalendarEventDescription
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 900
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: POPULATE_EVENTS_DESCRIPTION
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 87b91e6a-96bc-4489-93f9-764030024945
+    DependsOn:
+      - LLV4LYQ1
+  LF1YIQG:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-HandleEventConfirmation
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 20
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: POST_EVENT_CONFIRMATION
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e9ca297b-2db3-46fa-8544-bfd1ae3b1cc5
+    DependsOn:
+      - LLV4LYQ1
+  LF2AKUS:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-SendGoogleCalendarEventUpdateMessages
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 900
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: SEND_MSG
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 038120f7-383e-482c-9dd1-5be07d60cfad
+    DependsOn:
+      - LLV4LYQ1
+  LF1GT7A:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-ReceiveWhatsappMessage
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 20
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: RECEIVE_MSG
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 46b3ae3d-9835-47b8-81ba-df6921075a4c
+    DependsOn:
+      - LLV4LYQ1
+  LF1NBGE:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-RedirectShortenedUrls
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 900
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: REDIRECT_SHROTENED_URL
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 170c9b2e-b9ad-4c32-bafc-7e92c74451bd
+    DependsOn:
+      - LLV4LYQ1
+  LFGV7K:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: GoogleEventManager-WhatsappMsgDeliveryStatusReceiver
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Select 
+          - 5
+          - !Split 
+            - ':'
+            - !Ref S3BucketArn
+        S3Key: google-event-manager-lambda-function.zip
+      Layers:
+        - !Ref LLV4LYQ1
+      Runtime: python3.9
+      Timeout: 20
+      Role: !GetAtt IAMR10MWK.Arn
+      Environment:
+        Variables:
+          ACTION: RECEIVE_MSG_STATUS
+          AWS_IAM_ACCESS_KEY_ID: !Ref IAMAK2IRPI
+          AWS_IAM_ACCESS_KEY_SECRET: !GetAtt IAMAK2IRPI.SecretAccessKey
+          CALENDAR_ID: !Ref CalendarId
+          CALENDLY_API_KEY: !Ref CalendlyAPIKey
+          CALENDLY_SCHEDULING_URL: !Ref CalendlySchedulingURL
+          FERNET_KEY: !Ref FernetKey
+          OPTIONAL_EMAIL_ADDRESS: !Ref OptionalEmailAddress
+          TWILIO_ACCOUNT_SID: !Ref TwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref TwilioAuthToken
+          TWILIO_PHONE_NUMBER: !Ref TwilioPhoneNumber
+          DOMAIN_NAME: !Ref DomainName
+          S3_BUCKET: !Select 
+            - 5
+            - !Split 
+              - ':'
+              - !Ref S3BucketArn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e05129fa-817a-4c14-bae6-d4c8f7062451
+    DependsOn:
+      - LLV4LYQ1
+  IAMR10MWK:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 18c8d45b-d216-4127-8841-a071e861ef0f
+  IAMU39HL8:
+    Type: 'AWS::IAM::User'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 75d1beed-ff43-4b02-87a3-1df6ec22e90d
+  IAMP3M1Q8:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: GoogleEventManager-AccessPolicy
+      Users:
+        - !Ref IAMU39HL8
+      Roles:
+        - !Ref IAMR10MWK
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 's3:*'
+            Resource: !Ref S3BucketArn
+          - Effect: Allow
+            Action:
+              - 's3:*'
+            Resource: !Join 
+              - /
+              - - !Ref S3BucketArn
+                - '*'
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !GetAtt DDBTLTDT.Arn
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !GetAtt DDBT56ZP2.Arn
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !Join ["/", [!GetAtt DDBTLTDT.Arn, "index", "GoogleEventManager-EventDescriptionMissingIndex"] ]
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !Join ["/", [!GetAtt DDBTLTDT.Arn, "index", "GoogleEventManager-EventsToMsg"] ]
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !Join ["/", [!GetAtt DDBTLTDT.Arn, "index", "GoogleEventManager-MessageDeliveryStatusIndex"] ]
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource: !Join ["/", [!GetAtt DDBTLTDT.Arn, "index", "GoogleEventManager-PhoneNumberIndex"] ]
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 925bb958-2d1b-465e-b3a1-4d949caf047c
+  AGCC4EW25:
+    Type: 'AWS::CertificateManager::Certificate'
+    Properties:
+      DomainName: !Ref DomainName
+      ValidationMethod: DNS
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 151ae1c0-55bc-407b-b90a-f9828443e7f3
+  AGDN4LHA2:
+    Type: 'AWS::ApiGateway::DomainName'
+    Properties:
+      CertificateArn: !Ref AGCC4EW25
+      DomainName: !Ref DomainName
+      EndpointConfiguration:
+        Types:
+          - EDGE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 08c9740f-1c01-4fe2-95b0-367333df984d
+    DependsOn:
+      - AGCC4EW25
+  AGBPM31HT7:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Properties:
+      BasePath: confirm
+      DomainName: !Ref AGDN4LHA2
+      RestApiId: !Ref AGRA1SQ0W
+      Stage: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d1781584-1da1-4359-99f0-48675e3b32f8
+    DependsOn:
+      - AGRA1SQ0W
+      - AGDN4LHA2
+  AGBPMBOLD:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Properties:
+      BasePath: r
+      DomainName: !Ref AGDN4LHA2
+      RestApiId: !Ref AGRA236MH
+      Stage: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7b97d9f1-e55a-429f-b91e-f25a011e9167
+    DependsOn:
+      - AGRA236MH
+      - AGDN4LHA2
+  AGRA1SQ0W:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: GoogleEventManager-PostEventConfirmation
+      Description: This is invoked when attendee schedules a meeting on Calendly.com. Cancels the old event which was rescheduled.
+      DisableExecuteApiEndpoint: true
+      EndpointConfiguration:
+        Types:
+          - EDGE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 045aac08-00ac-40d2-8518-2e7cafa01cd8
+  AGRA236MH:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: GoogleEventManager-RedirectShortenedUrls
+      Description: Redirects shortened URLs. Shortened URLs use domain name owned by you
+      DisableExecuteApiEndpoint: true
+      EndpointConfiguration:
+        Types:
+          - EDGE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8df7156c-619f-4ff0-985b-ac61aa8e92fd
+  AGRAA43Q:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: GoogleEventManager-WhatsappMsgDeliveryStatus
+      Description: This API is invoked by Twilio on message delivery status updates
+      EndpointConfiguration:
+        Types:
+          - EDGE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8847e112-828a-4f75-92d9-d6e759abcf58
+  AGRA3XMKT:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: GoogleEventManager-WhatsappMsgReceived
+      Description: >-
+        This API is invoked when attendee sends a Whatsapp message to the host's
+        Whatsapp business number
+      EndpointConfiguration:
+        Types:
+          - EDGE
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 34c5bfae-44be-4056-8042-63acebf6331c
+  LLG1OPF8:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF1NBGE
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5ef79daa-12b9-4764-88c9-2fd4266aafda
+    DependsOn:
+      - LF1NBGE
+  LLG3U0P5:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF59EBZ
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: fa5bce6b-26d7-49f5-a056-cab9e60416f6
+    DependsOn:
+      - LF59EBZ
+  LLG52J7L:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF1EJAP
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7d436c17-5e06-43bc-9baf-60a255687c2b
+    DependsOn:
+      - LF1EJAP
+  LLG2U8F6:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF1YIQG
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6b470c8c-288b-48b8-b800-70ea981baef5
+    DependsOn:
+      - LF1YIQG
+  LLG12BHL:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF2AKUS
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: fb0780af-84d4-489d-bb51-e4017201e2bd
+    DependsOn:
+      - LF2AKUS
+  LLG3PUDB:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LF1GT7A
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9c7ddd0b-8745-41c3-9513-01a9dc83f94a
+    DependsOn:
+      - LF1GT7A
+  LLG40YKK:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join 
+        - ''
+        - - /aws/lambda/
+          - !Ref LFGV7K
+      RetentionInDays: 90
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d6701790-9006-458d-ab2e-da6a12c9c874
+    DependsOn:
+      - LFGV7K
+  IAMAK2IRPI:
+    Type: 'AWS::IAM::AccessKey'
+    Properties:
+      UserName: !Ref IAMU39HL8
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a3819454-7758-4da8-b953-ae4685fef002
+    DependsOn:
+      - IAMU39HL8
+  AGS1CBS1:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AGRA1SQ0W
+      Description: My Prod deployment
+      StageName: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a29a8f84-12a2-4812-8e2c-58e41f83189f
+    DependsOn:
+      - AGM3AF5O
+  AGS1BIY6:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AGRA236MH
+      Description: My Prod deployment
+      StageName: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0555feb4-396f-4ecb-88f5-43751388c4ba
+    DependsOn:
+      - AGM44TMM
+  AGS1MFB3:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AGRAA43Q
+      Description: My Prod deployment
+      StageName: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: bd029848-efb9-4f58-860e-ed6e21bf210b
+    DependsOn:
+      - AGM5BLCN
+  AGS4OC2I:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AGRA3XMKT
+      Description: My Prod deployment
+      StageName: Prod
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4a7462a1-4db4-46cf-8214-941d517503d0
+    DependsOn:
+      - AGM40P3K
+  AGM3AF5O:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref AGRA1SQ0W
+      ResourceId: !GetAtt AGRA1SQ0W.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: Empty
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LF1YIQG.Arn}/invocations
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d567b757-52e8-453b-80d8-decfb7fec25d
+    DependsOn:
+      - LF1YIQG
+  AGM44TMM:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref AGRA236MH
+      ResourceId: !GetAtt AGRA236MH.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: Empty
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LF1NBGE.Arn}/invocations
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 65cefaa3-ccc6-4c59-aaa8-8eb524584071
+    DependsOn:
+      - LF1NBGE
+  AGM5BLCN:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref AGRAA43Q
+      ResourceId: !GetAtt AGRAA43Q.RootResourceId
+      HttpMethod: POST
+      AuthorizationType: NONE
+      MethodResponses:
+        - ResponseModels:
+            application/json: Empty
+          StatusCode: 200
+      Integration:
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: Empty
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LFGV7K.Arn}/invocations
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 588d0fc0-11d3-4520-a4a5-7a2238d8981b
+    DependsOn:
+      - LFGV7K
+  AGM40P3K:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref AGRA3XMKT
+      ResourceId: !GetAtt AGRA3XMKT.RootResourceId
+      HttpMethod: POST
+      AuthorizationType: NONE
+      MethodResponses:
+        - ResponseModels:
+            application/xml: Empty
+          StatusCode: 200
+      Integration:
+        RequestTemplates:
+          application/x-www-form-urlencoded: |
+            #set($httpPost = $input.path('$').split("&"))
+            {
+            #foreach( $kvPair in $httpPost )
+             #set($kvTokenised = $kvPair.split("="))
+             #if( $kvTokenised.size() > 1 )
+               "$kvTokenised[0]" : "$kvTokenised[1]"#if( $foreach.hasNext ),#end
+             #else
+               "$kvTokenised[0]" : ""#if( $foreach.hasNext ),#end
+             #end
+            #end
+            }
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/xml: $input.path('$')
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LF1GT7A.Arn}/invocations
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 45ad3c36-de11-4371-bacb-c12ad295faca
+    DependsOn:
+      - LF1GT7A
+  ER4AJKT:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: GoogleEventManager-ScheduledRule
+      ScheduleExpression: rate(5 minutes)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt LF59EBZ.Arn
+          Id: TargetFunction1
+        - Arn: !GetAtt LF1EJAP.Arn
+          Id: TargetFunction2
+        - Arn: !GetAtt LF2AKUS.Arn
+          Id: TargetFunction3
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d4601358-a0e4-4b69-bd0d-aea2eeaaa977
+  LPTFO7:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF59EBZ
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ER4AJKT.Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7007e8e2-bfda-40c5-9bcc-14f4bcd53328
+    DependsOn:
+      - LF59EBZ
+      - ER4AJKT
+  LP3MCOM:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF2AKUS
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ER4AJKT.Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: cab1adb0-e2f0-44e6-aeba-7a9c402e1e4c
+    DependsOn:
+      - LF2AKUS
+      - ER4AJKT
+  LP2RZ0O:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF1EJAP
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ER4AJKT.Arn
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b317f7e4-8a12-460b-a313-ce256e6f7172
+    DependsOn:
+      - LF1EJAP
+      - ER4AJKT
+  LP2Z49R:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF1YIQG
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AGRA1SQ0W}/*/GET/*"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b949445c-8967-4cde-9937-9f3807fce08d
+    DependsOn:
+      - LF1YIQG
+      - AGRA1SQ0W
+  LP53D2D:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF1NBGE
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AGRA236MH}/*/GET/*"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4c5ee952-e4cb-4eb5-9e29-135af6a10b6d
+    DependsOn:
+      - LF1NBGE
+      - AGRA236MH
+  LP5AEWH:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LFGV7K
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AGRAA43Q}/*/POST/*"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e93eccbc-befd-41ed-9d82-328ceb05ef68
+    DependsOn:
+      - LFGV7K
+      - AGRAA43Q
+  LP1HD9T:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LF1GT7A
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AGRA3XMKT}/*/POST/*"
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: cacf7bb8-660d-44fd-afa1-ad986761bebb
+    DependsOn:
+      - LF1GT7A
+      - AGRA3XMKT
