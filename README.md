@@ -41,13 +41,16 @@ Workflows supported by this project:
 - Note down event's link. This will be needed when setting up resources in AWS developer account for this project.
 
 ### Google Calendar setup
-- TODO
+- Create a project in [Google developer console](https://developers.google.com/workspace/guides/create-project) and enable Google Calendar API for the project.
+- Create **Service Account** credentials for the project. Download the json for Service Account credentials temporarily on your local machine. **Note** that this json file is private and should not be made public.
+- Let's say name of the json file on your local machine is MY_GOOGLE_SERVICE_ACCOUNT_CREDS.json
+- Note the json file path down. This will be needed when setting up resources in AWS developer account for this project. 
 
 ### AWS developer account setup
 
 Execute the following steps in **AWS region us-east-1 (IAD)**:
 - Create a S3 bucket. Let's say you name it MY_S3_BUCKET.
-- Upload [Google service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys) to MY_S3_BUCKET/google-event-manager-service-account.json
+- Upload MY_GOOGLE_SERVICE_ACCOUNT_CREDS.json from your local machine to MY_S3_BUCKET/google-event-manager-service-account.json. Delete MY_GOOGLE_SERVICE_ACCOUNT_CREDS.json from your local machine.
 - Zip [lambda_function.py](lambda_function.py) which is located at project source code's root directory into google-event-manager-lambda-function.zip and upload it to MY_S3_BUCKET/google-event-manager-lambda-function.zip. To speed up initial setup, instead of zipping your own lambda-function.py you can use [pre-zipped lambda-function.py](https://github.com/rishabhjain08/google-event-manager/releases/download/Release/google-event-manager-lambda-function.zip) in Github Releases for this repo.
 - Install all the python dependencies under a directory named **python** since AWS Lambda [requires](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html#configuration-layers-path) python dependencies to be installed under **python** directory, then zipped and uploaded to create a Lambda layer. Upload the zip of **python** directory to MY_S3_BUCKET/google-event-manager-lambda-layer.zip. To speed up initial setup, instead of installing your own dependcies and zipping them you can use [pre-zipped python directory](https://github.com/rishabhjain08/google-event-manager/releases/download/Release/google-event-manager-lambda-layer.zip) in Github Releases for this repo.
 - Create a [CloudFormation stack](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html) using [template.yaml](template.yaml) located at project's source code's root directory. Note that [template.yaml](template.yaml) can be opened in [CloudFormation Designer](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/working-with-templates-cfn-designer.html).
