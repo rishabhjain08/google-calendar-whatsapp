@@ -42,9 +42,10 @@ Workflows supported by this project:
 
 ### Google Calendar setup
 - Create a project in [Google developer console](https://developers.google.com/workspace/guides/create-project) and enable Google Calendar API for the project.
-- Create **Service Account** credentials for the project. Download the json for Service Account credentials temporarily on your local machine. **Note** that this json file is private and should not be made public.
-- Let's say name of the json file on your local machine is MY_GOOGLE_SERVICE_ACCOUNT_CREDS.json
+- Create **Service Account** credentials for the project. Download the json for Service Account credentials temporarily on your local machine. **Note** that this json file is private and should not be made public. Let's say name of the json file on your local machine is MY_GOOGLE_SERVICE_ACCOUNT_CREDS.json
 - Note the json file path down. This will be needed when setting up resources in AWS developer account for this project. 
+- Note down the [email address](https://cloud.google.com/iam/docs/service-accounts#user-managed) corresponding to the Service Account you just created. It will look something like service-account-name@project-id.iam.gserviceaccount.com. Let's say the email address is MY_GOOGLE_SERVICE_ACCOUNT_EMAIL_ADDRESS. 
+- We now need to go to out Google Calendar and [configure]((https://support.google.com/calendar/answer/37082?hl=en-GB)) it so that *MY_GOOGLE_SERVICE_ACCOUNT_EMAIL_ADDRESS* is allowed to access our Google Calendar. Under *Settings > Share with specific people* grant MY_GOOGLE_SERVICE_ACCOUNT_EMAIL_ADDRESS permission to *Make changes to events*.
 
 ### AWS developer account setup
 
