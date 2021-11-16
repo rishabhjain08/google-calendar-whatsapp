@@ -40,6 +40,9 @@ Workflows supported by this project:
 - Under event settings, configure the confirmation page by changing *Confirmation Page > On confirmation* to **Redirect to an external site** and by changing *Confirmation Page > Redirect URL* to **https://MY_DOMAIN_NAME/confirm**.  
 - Note down event's link. This will be needed when setting up resources in AWS developer account for this project.
 
+### Google Calendar setup
+- TODO
+
 ### AWS developer account setup
 
 Execute the following steps in **AWS region us-east-1 (IAD)**:
